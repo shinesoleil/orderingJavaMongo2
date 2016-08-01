@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.jongo.marshall.jackson.oid.MongoId;
 
 import java.util.Date;
+import java.util.List;
 
 public class Order {
   @MongoId
@@ -14,7 +15,8 @@ public class Order {
   private String name;
   private String address;
   private String phone;
-  private Date time;
+  @JsonProperty("order_items")
+  private List<OrderItem> orderItems;
 
   public Order() {
   }
@@ -39,7 +41,11 @@ public class Order {
     return phone;
   }
 
+  public List<OrderItem> getOrderItems() {
+    return orderItems;
+  }
+
   public Date getTime() {
-    return time;
+    return id.getDate();
   }
 }

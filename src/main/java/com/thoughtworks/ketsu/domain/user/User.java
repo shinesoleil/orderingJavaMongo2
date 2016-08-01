@@ -1,6 +1,7 @@
 package com.thoughtworks.ketsu.domain.user;
 
 import com.thoughtworks.ketsu.domain.order.Order;
+import com.thoughtworks.ketsu.domain.product.ProductRepository;
 import com.thoughtworks.ketsu.infrastructure.records.Record;
 import com.thoughtworks.ketsu.web.jersey.Routes;
 import org.bson.types.ObjectId;
@@ -10,10 +11,14 @@ import org.jongo.marshall.jackson.oid.MongoId;
 
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class User implements Record{
+  @Inject
+  ProductRepository productRepository;
+
   @Inject
   Jongo jongo;
 
@@ -37,10 +42,19 @@ public class User implements Record{
     return name;
   }
 
+  public void addAmount(Map<String, Object> info) {
+    for (Map<String, Object> orderItem: (List<Map<String, Object>>)info.get("order_items")) {
+      double price = productRepository.findById(new ObjectId(String.valueOf(orderItem.get("product_id")))).get().getPrice();
+      int quantity = (Integer) orderItem.get("quantity");
+      orderItem.put("amount", price * quantity);
+    }
+  }
+
   public Optional<Order> placeOrder(Map<String, Object> info) {
     MongoCollection orders = jongo.getCollection("orders");
     info.put("_id", new ObjectId());
     info.put("user_id", id);
+    addAmount(info);
     ObjectId orderId = (ObjectId) orders.save(info).getUpsertedId();
     return Optional.ofNullable(orders.findOne(orderId).as(Order.class));
   }

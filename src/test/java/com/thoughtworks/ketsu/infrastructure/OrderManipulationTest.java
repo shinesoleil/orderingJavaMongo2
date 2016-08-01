@@ -1,6 +1,8 @@
 package com.thoughtworks.ketsu.infrastructure;
 
 import com.thoughtworks.ketsu.domain.order.Order;
+import com.thoughtworks.ketsu.domain.product.Product;
+import com.thoughtworks.ketsu.domain.product.ProductRepository;
 import com.thoughtworks.ketsu.domain.user.User;
 import com.thoughtworks.ketsu.domain.user.UserRepository;
 import com.thoughtworks.ketsu.support.TestHelper;
@@ -20,20 +22,28 @@ import static org.hamcrest.core.Is.is;
 public class OrderManipulationTest {
 
   @Inject
+  ProductRepository productRepository;
+
+  @Inject
   UserRepository userRepository;
 
   @Test
-  public void should_create_order_and_find_by_id() {
+  public void should_create_order_with_orderItems_and_find_by_id() {
+    Map<String, Object> productInfo = TestHelper.productMap();
+    Product product = productRepository.create(productInfo).get();
+    ObjectId productId = product.getId();
+
     Map<String, Object> userInfo = TestHelper.userMap();
     User user = userRepository.create(userInfo).get();
     ObjectId userId = user.getId();
 
-    Map<String, Object> orderInfo = TestHelper.orderMap();
+    Map<String, Object> orderInfo = TestHelper.orderMap(productId);
     ObjectId orderId = user.placeOrder(orderInfo).get().getId();
     Optional<Order> orderOptional = user.findOrderById(orderId);
 
     assertThat(orderOptional.isPresent(), is(true));
     assertThat(orderOptional.get().getUserId(), is(userId));
-
+    assertThat(orderOptional.get().getOrderItems().get(0).getQuantity(), is(2));
+    assertThat(orderOptional.get().getOrderItems().get(0).getAmount(), is(1222.0));
   }
 }
