@@ -52,4 +52,12 @@ public class UsersApiTest extends ApiSupport{
     assertThat(get.getStatus(), is(200));
     assertThat(map.get("name"), is("firstUser"));
   }
+
+  @Test
+  public void should_return_404_when_find_by_id_not_found() {
+    ObjectId id = ObjectId.createFromLegacyFormat(1, 1, 1);
+    Response get = get("users/" + id);
+
+    assertThat(get.getStatus(), is(404));
+  }
 }

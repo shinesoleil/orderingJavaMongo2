@@ -92,6 +92,7 @@ r: 6 min
  
 2. return 404 when GET by user id not found  
  e: 5 min  
+ r: 1 min
   
   
 * ###/users/{userId}/orders
