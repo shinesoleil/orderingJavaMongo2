@@ -1,8 +1,7 @@
 package com.thoughtworks.ketsu.support;
 
-import org.bson.types.ObjectId;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestHelper {
 
@@ -21,25 +20,25 @@ public class TestHelper {
     }};
   }
 
-  public static Map<String, Object> orderMap(ObjectId productId) {
+  public static Map<String, Object> orderMap() {
     return new HashMap<String, Object>() {{
       put("name", "firstOrder");
       put("address", "Beijing");
       put("phone", "13099999999");
-      put("order_items", orderItemMapList(productId));
+//      put("order_items", orderItemMapList(productId));
     }};
   }
-
-  public static List<Map<String, Object>> orderItemMapList(ObjectId productId) {
-    Map<String, Object> item = new HashMap<String, Object>() {{
-      put("product_id", productId.toString());
-      put("quantity", 2);
-    }};
-
-    return new ArrayList<Map<String, Object>>() {{
-      add(item);
-    }};
-  }
+//
+//  public static List<Map<String, Object>> orderItemMapList(ObjectId productId) {
+//    Map<String, Object> item = new HashMap<String, Object>() {{
+//      put("product_id", productId.toString());
+//      put("quantity", 2);
+//    }};
+//
+//    return new ArrayList<Map<String, Object>>() {{
+//      add(item);
+//    }};
+//  }
 
 
 

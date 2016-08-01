@@ -105,6 +105,7 @@ r: 6 min
 
 2. create order without orderItems and find by user id and order id  
  e: 20 min  
+ r: 17 min
     
    
 3. create order with orderItems and find by user id and order id  
