@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -66,13 +67,23 @@ public class OrdersApiTest extends ApiSupport{
 
 
   @Test
-  public void should_return_200_when_get_orders() {
+  public void should_return_list_order_json_when_get_orders() {
+    Map<String, Object> productInfo = TestHelper.productMap();
+    Product product = productRepository.create(productInfo).get();
+    ObjectId productId = product.getId();
+
     Map<String, Object> userInfo = TestHelper.userMap();
     User user = userRepository.create(userInfo).get();
     ObjectId userId = user.getId();
 
+    Map<String, Object> orderInfo = TestHelper.orderMap(productId);
+    user.placeOrder(orderInfo);
+
     Response get = get("users/" + userId + "/orders");
+    List<Map<String, Object>> mapList = get.readEntity(List.class);
 
     assertThat(get.getStatus(), is(200));
+    assertThat(mapList.size(), is(1));
+    assertThat(mapList.get(0).get("name"), is("firstOrder"));
   }
 }

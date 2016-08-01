@@ -1,13 +1,17 @@
 package com.thoughtworks.ketsu.domain.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.thoughtworks.ketsu.infrastructure.records.Record;
+import com.thoughtworks.ketsu.web.jersey.Routes;
 import org.bson.types.ObjectId;
 import org.jongo.marshall.jackson.oid.MongoId;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class Order {
+public class Order implements Record{
   @MongoId
   private ObjectId id;
   @JsonProperty("user_id")
@@ -47,5 +51,32 @@ public class Order {
 
   public Date getTime() {
     return id.getDate();
+  }
+
+  public double getTotalPrice() {
+    double totalPrice = 0;
+
+    for (OrderItem item: orderItems) {
+      totalPrice += item.getAmount();
+    }
+
+    return totalPrice;
+  }
+
+  @Override
+  public Map<String, Object> toRefJson(Routes routes) {
+    return new HashMap() {{
+      put("url", new Routes().orderUri(Order.this));
+      put("name", name);
+      put("address", address);
+      put("phone", phone);
+      put("total_price", getTotalPrice());
+      put("created_at", getTime());
+    }};
+  }
+
+  @Override
+  public Map<String, Object> toJson(Routes routes) {
+    return null;
   }
 }
