@@ -88,7 +88,11 @@ public class Order implements Record{
     MongoCollection orders = jongo.getCollection("orders");
     Order order = orders.findOne(id).as(Order.class);
 
-    return Optional.ofNullable(order.getPayment());
+    if (order.isPaid()) {
+      return Optional.ofNullable(order.getPayment());
+    } else {
+      return Optional.ofNullable(null);
+    }
   }
 
   @Override

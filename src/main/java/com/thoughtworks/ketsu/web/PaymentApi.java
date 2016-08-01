@@ -42,6 +42,6 @@ public class PaymentApi {
                             @PathParam("orderId") ObjectId orderId) {
     User user = userRepository.findById(userId).get();
     Order order = user.findOrderById(orderId).get();
-    return order.findPayment().get();
+    return order.findPayment().orElseThrow(() -> new NotFoundException("Cannot find payment, order not paid yet"));
   }
 }
