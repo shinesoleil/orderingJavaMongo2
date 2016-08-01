@@ -4,11 +4,9 @@ import com.thoughtworks.ketsu.domain.user.User;
 import com.thoughtworks.ketsu.domain.user.UserRepository;
 import com.thoughtworks.ketsu.web.exception.InvalidParameterException;
 import com.thoughtworks.ketsu.web.jersey.Routes;
+import org.bson.types.ObjectId;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -42,4 +40,12 @@ public class UsersApi {
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
   }
+
+  @GET
+  @Path("{userId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public User findUserById(@PathParam("userId")ObjectId userId) {
+    return userRepository.findById(userId).get();
+  }
+
 }
