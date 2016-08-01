@@ -3,6 +3,7 @@ package com.thoughtworks.ketsu.web;
 import com.thoughtworks.ketsu.domain.order.Order;
 import com.thoughtworks.ketsu.domain.user.User;
 import com.thoughtworks.ketsu.domain.user.UserRepository;
+import com.thoughtworks.ketsu.web.jersey.Routes;
 import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
@@ -27,7 +28,7 @@ public class OrdersApi {
     Optional<Order> orderOptional = user.placeOrder(info);
 
     if (orderOptional.isPresent()) {
-      return Response.status(201).build();
+      return Response.created(new Routes().orderUri(orderOptional.get())).build();
     } else {
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }

@@ -119,8 +119,8 @@ r: 6 min
  r: 7 min
  
 5. return url in location when POST order with parameters
-  e: 5 min
-   
+  e: 5 min  
+  r: 4 min
    
      
 6. return 400 when POST order with invalid parameters  
