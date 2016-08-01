@@ -3,6 +3,7 @@ package com.thoughtworks.ketsu.web;
 import com.thoughtworks.ketsu.domain.user.User;
 import com.thoughtworks.ketsu.domain.user.UserRepository;
 import com.thoughtworks.ketsu.web.exception.InvalidParameterException;
+import com.thoughtworks.ketsu.web.jersey.Routes;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -36,7 +37,7 @@ public class UsersApi {
     Optional<User> userOptional = userRepository.create(info);
 
     if (userOptional.isPresent()) {
-      return Response.status(201).build();
+      return Response.created(new Routes().userUri(userOptional.get())).build();
     } else {
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }

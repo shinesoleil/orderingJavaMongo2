@@ -78,7 +78,8 @@
 
 
 5. return url in location when POST user with parameters
-  e: 5 min
+  e: 5 min  
+  r: 2 min
    
 
     
