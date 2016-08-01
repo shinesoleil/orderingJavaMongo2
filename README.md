@@ -73,6 +73,7 @@
 
 4. return 400 when POST user with invalid parameters  
  e: 8 min  
+ r: 1 min
   
 
 
