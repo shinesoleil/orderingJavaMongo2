@@ -68,6 +68,7 @@
   
 3. return 201 when POST user with parameters  
  e: 5 min  
+ r: 3 min
 
 
 4. return 400 when POST user with invalid parameters  
