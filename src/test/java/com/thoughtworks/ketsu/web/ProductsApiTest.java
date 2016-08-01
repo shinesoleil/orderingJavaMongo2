@@ -65,4 +65,12 @@ public class ProductsApiTest extends ApiSupport {
     assertThat(get.getStatus(), is(200));
     assertThat(map.get("name"), is("desk"));
   }
+
+  @Test
+  public void should_return_404_when_find_by_id_not_found() {
+    ObjectId id = ObjectId.createFromLegacyFormat(1, 1, 1);
+    Response get = get("products/" + id);
+
+    assertThat(get.getStatus(), is(404));
+  }
 }

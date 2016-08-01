@@ -48,6 +48,7 @@
   
 2. return 404 when GET product by product id fails  
  e: 3 min  
+ r: 3 min
   
   
 * ###/users
