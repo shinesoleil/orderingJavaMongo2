@@ -29,7 +29,7 @@ public class TestRunner extends InjectBasedRunner {
       } finally {
         jongo.getCollection("products").remove();
         jongo.getCollection("users").remove();
-        jongo.getCollection("orders").remove();
+//        jongo.getCollection("orders").remove();
       }
     }
   };

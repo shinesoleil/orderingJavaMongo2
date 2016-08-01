@@ -1,16 +1,22 @@
 package com.thoughtworks.ketsu.domain.order;
 
-import org.bson.types.ObjectId;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.thoughtworks.ketsu.infrastructure.records.Record;
+import com.thoughtworks.ketsu.web.jersey.Routes;
 
-public class OrderItem {
-  private ObjectId productId;
+import java.util.HashMap;
+import java.util.Map;
+
+public class OrderItem implements Record {
+  @JsonProperty("product_id")
+  private String productId;
   private int quantity;
   private double amount;
 
   public OrderItem() {
   }
 
-  public ObjectId getProductId() {
+  public String getProduct_id() {
     return productId;
   }
 
@@ -20,5 +26,23 @@ public class OrderItem {
 
   public double getAmount() {
     return amount;
+  }
+
+  @Override
+  public Map<String, Object> toRefJson(Routes routes) {
+    return new HashMap() {{
+      put("product_id", productId);
+      put("quantity", quantity);
+      put("amount", amount);
+    }};
+  }
+
+  @Override
+  public Map<String, Object> toJson(Routes routes) {
+    return new HashMap() {{
+      put("product_id", productId);
+      put("quantity", quantity);
+      put("amount", amount);
+    }};
   }
 }

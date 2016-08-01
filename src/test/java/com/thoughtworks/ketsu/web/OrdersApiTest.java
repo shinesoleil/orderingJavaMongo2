@@ -86,4 +86,36 @@ public class OrdersApiTest extends ApiSupport{
     assertThat(mapList.size(), is(1));
     assertThat(mapList.get(0).get("name"), is("firstOrder"));
   }
+
+  @Test
+  public void should_return_order_json_when_get_by_id() {
+    Map<String, Object> productInfo = TestHelper.productMap();
+    Product product = productRepository.create(productInfo).get();
+    ObjectId productId = product.getId();
+
+    Map<String, Object> userInfo = TestHelper.userMap();
+    User user = userRepository.create(userInfo).get();
+    ObjectId userId = user.getId();
+
+    Map<String, Object> orderInfo = TestHelper.orderMap(productId);
+    ObjectId orderId = user.placeOrder(orderInfo).get().getId();
+
+    Response get = get("users/" + userId + "/orders/" + orderId);
+    Map<String, Object> map = get.readEntity(Map.class);
+
+    assertThat(get.getStatus(), is(200));
+    assertThat(map.get("name"), is("firstOrder"));
+  }
+
+  @Test
+  public void should_return_404_when_get_by_id_not_found() {
+    Map<String, Object> userInfo = TestHelper.userMap();
+    User user = userRepository.create(userInfo).get();
+    ObjectId userId = user.getId();
+
+    Response get = get("users/" + userId + "/orders/" + ObjectId.createFromLegacyFormat(1, 1, 1));
+
+    assertThat(get.getStatus(), is(404));
+
+  }
 }
