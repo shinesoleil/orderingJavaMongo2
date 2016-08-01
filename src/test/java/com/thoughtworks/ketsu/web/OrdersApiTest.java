@@ -47,6 +47,22 @@ public class OrdersApiTest extends ApiSupport{
       is(true));
   }
 
+  @Test
+  public void should_return_400_when_post_with_invalid_params() {
+    Map<String, Object> productInfo = TestHelper.productMap();
+    Product product = productRepository.create(productInfo).get();
+    ObjectId productId = product.getId();
+
+    Map<String, Object> userInfo = TestHelper.userMap();
+    User user = userRepository.create(userInfo).get();
+    ObjectId userId = user.getId();
+
+    Map<String, Object> orderInfo = TestHelper.orderMap(productId);
+    orderInfo.replace("name", null);
+
+    Response post = post("users/" + userId + "/orders", orderInfo);
+    assertThat(post.getStatus(), is(400));
+  }
 
 
 }

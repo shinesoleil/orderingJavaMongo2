@@ -125,6 +125,7 @@ r: 6 min
      
 6. return 400 when POST order with invalid parameters  
  e: 8 min  
+ r: 3 min
   
     
 7. return 200 when GET orders  
