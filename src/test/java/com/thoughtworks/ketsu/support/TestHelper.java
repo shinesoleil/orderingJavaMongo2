@@ -44,9 +44,6 @@ public class TestHelper {
     }};
   }
 
-
-
-
   public static Map<String, Object> paymentMap() {
     return new HashMap<String, Object>() {{
       put("pay_type", "CASH");

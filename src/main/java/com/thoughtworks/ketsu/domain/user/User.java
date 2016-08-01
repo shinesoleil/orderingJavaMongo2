@@ -1,5 +1,6 @@
 package com.thoughtworks.ketsu.domain.user;
 
+import com.google.inject.Injector;
 import com.thoughtworks.ketsu.domain.order.Order;
 import com.thoughtworks.ketsu.domain.product.ProductRepository;
 import com.thoughtworks.ketsu.infrastructure.records.Record;
@@ -19,6 +20,9 @@ public class User implements Record{
 
   @Inject
   Jongo jongo;
+
+  @Inject
+  Injector injector;
 
   @MongoId
   private ObjectId id;
@@ -54,13 +58,18 @@ public class User implements Record{
     info.put("user_id", id);
     addAmount(info);
     ObjectId orderId = (ObjectId) orders.save(info).getUpsertedId();
-    return Optional.ofNullable(orders.findOne(orderId).as(Order.class));
+
+    Order order = orders.findOne(orderId).as(Order.class);
+    injector.injectMembers(order);
+    return Optional.ofNullable(order);
   }
 
   public Optional<Order> findOrderById(ObjectId orderId) {
     MongoCollection orders = jongo.getCollection("orders");
 
-    return Optional.ofNullable(orders.findOne(orderId).as(Order.class));
+    Order order = orders.findOne(orderId).as(Order.class);
+    injector.injectMembers(order);
+    return Optional.ofNullable(order);
   }
 
   public List<Order> find() {

@@ -1,17 +1,21 @@
 package com.thoughtworks.ketsu.domain.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.thoughtworks.ketsu.domain.payment.Payment;
 import com.thoughtworks.ketsu.infrastructure.records.Record;
 import com.thoughtworks.ketsu.web.jersey.Routes;
 import org.bson.types.ObjectId;
+import org.jongo.Jongo;
+import org.jongo.MongoCollection;
 import org.jongo.marshall.jackson.oid.MongoId;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.inject.Inject;
+import java.util.*;
 
 public class Order implements Record{
+  @Inject
+  Jongo jongo;
+
   @MongoId
   private ObjectId id;
   @JsonProperty("user_id")
@@ -21,6 +25,7 @@ public class Order implements Record{
   private String phone;
   @JsonProperty("order_items")
   private List<OrderItem> orderItems;
+  private Payment payment;
 
   public Order() {
   }
@@ -53,6 +58,10 @@ public class Order implements Record{
     return id.getDate();
   }
 
+  public Payment getPayment() {
+    return new Payment(id, payment.getPayType(), payment.getPayTime(), payment.getAmount());
+  }
+
   public double getTotalPrice() {
     double totalPrice = 0;
 
@@ -61,6 +70,19 @@ public class Order implements Record{
     }
 
     return totalPrice;
+  }
+
+  public void pay(Map<String, Object> paymentInfo) {
+    MongoCollection orders = jongo.getCollection("orders");
+    paymentInfo.put("pay_time", new Date());
+    orders.update(id).with("{$set: {payment: #}}", paymentInfo);
+  }
+
+  public Optional<Payment> findPayment() {
+    MongoCollection orders = jongo.getCollection("orders");
+    Order order = orders.findOne(id).as(Order.class);
+
+    return Optional.ofNullable(order.getPayment());
   }
 
   @Override
