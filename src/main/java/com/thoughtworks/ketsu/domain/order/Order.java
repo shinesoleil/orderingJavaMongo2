@@ -72,10 +72,16 @@ public class Order implements Record{
     return totalPrice;
   }
 
-  public void pay(Map<String, Object> paymentInfo) {
+  public boolean isPaid() {
+    return payment != null;
+  }
+
+  public Order pay(Map<String, Object> paymentInfo) {
     MongoCollection orders = jongo.getCollection("orders");
     paymentInfo.put("pay_time", new Date());
     orders.update(id).with("{$set: {payment: #}}", paymentInfo);
+
+    return orders.findOne(id).as(Order.class);
   }
 
   public Optional<Payment> findPayment() {
