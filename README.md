@@ -21,7 +21,8 @@
    
     
 5. return url in location when POST product with parameters
-  e: 5 min
+  e: 5 min  
+  r: 3 min
    
  
   
