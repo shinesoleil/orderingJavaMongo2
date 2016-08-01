@@ -1,12 +1,15 @@
 package com.thoughtworks.ketsu.web;
 
+import com.thoughtworks.ketsu.domain.product.ProductRepository;
 import com.thoughtworks.ketsu.support.ApiSupport;
 import com.thoughtworks.ketsu.support.TestHelper;
 import com.thoughtworks.ketsu.support.TestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -15,6 +18,9 @@ import static org.hamcrest.core.Is.is;
 
 @RunWith(TestRunner.class)
 public class ProductsApiTest extends ApiSupport {
+
+  @Inject
+  ProductRepository productRepository;
 
   @Test
   public void should_return_url_location_when_post_with_params() {
@@ -32,6 +38,17 @@ public class ProductsApiTest extends ApiSupport {
 
     Response post = post("products", info);
     assertThat(post.getStatus(), is(400));
+  }
 
+  @Test
+  public void should_return_200_when_get_products() {
+    Map<String, Object> info = TestHelper.productMap();
+    productRepository.create(info);
+
+    Response get = get("products");
+    List<Map<String, Object>> mapList = get.readEntity(List.class);
+
+    assertThat(mapList.size(), is(1));
+    assertThat(mapList.get(0).get("name"), is("desk"));
   }
 }

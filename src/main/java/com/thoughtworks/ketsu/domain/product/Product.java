@@ -1,9 +1,14 @@
 package com.thoughtworks.ketsu.domain.product;
 
+import com.thoughtworks.ketsu.infrastructure.records.Record;
+import com.thoughtworks.ketsu.web.jersey.Routes;
 import org.bson.types.ObjectId;
 import org.jongo.marshall.jackson.oid.MongoId;
 
-public class Product {
+import java.util.HashMap;
+import java.util.Map;
+
+public class Product implements Record {
   @MongoId
   private ObjectId id;
   private String name;
@@ -34,5 +39,21 @@ public class Product {
 
   public double getPrice() {
     return price;
+  }
+
+  @Override
+  public Map<String, Object> toRefJson(Routes routes) {
+    return new HashMap() {{
+      put("id", id.toString());
+      put("url", new Routes().productUri(Product.this));
+      put("name", name);
+      put("description", description);
+      put("price", price);
+    }};
+  }
+
+  @Override
+  public Map<String, Object> toJson(Routes routes) {
+    return null;
   }
 }
