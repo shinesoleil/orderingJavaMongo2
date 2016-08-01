@@ -2,6 +2,7 @@ package com.thoughtworks.ketsu.web.jersey;
 
 
 import com.thoughtworks.ketsu.domain.order.Order;
+import com.thoughtworks.ketsu.domain.payment.Payment;
 import com.thoughtworks.ketsu.domain.product.Product;
 import com.thoughtworks.ketsu.domain.user.User;
 
@@ -28,8 +29,11 @@ public class Routes {
     return URI.create("users/" + order.getUserId() + "/orders/" + order.getId());
   }
 
-  public URI paymentUri(Order order) {
-    return URI.create("users/" + order.getUserId() + "/orders/" + order.getId() + "/payment");
+  public URI paymentUri(Payment payment) {
+    return URI.create("users/" + payment.getUserId() + "/orders/" + payment.getOrderId() + "/payment");
+  }
 
+  public URI orderUriOfPayment(Payment payment) {
+    return URI.create("users/" + payment.getUserId() + "/orders/" + payment.getOrderId());
   }
 }

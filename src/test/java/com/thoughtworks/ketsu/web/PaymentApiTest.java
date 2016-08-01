@@ -52,4 +52,27 @@ public class PaymentApiTest extends ApiSupport{
       Pattern.matches(".*users/[0-9a-z]+/orders/[0-9a-z]+/payment", post.getLocation().toASCIIString()),
       is(true));
   }
+
+  @Test
+  public void should_return_payment_json_when_get_payment_by_order_id() {
+    Map<String, Object> productInfo = TestHelper.productMap();
+    Product product = productRepository.create(productInfo).get();
+    ObjectId productId = product.getId();
+
+    Map<String, Object> userInfo = TestHelper.userMap();
+    User user = userRepository.create(userInfo).get();
+    ObjectId userId = user.getId();
+
+    Map<String, Object> orderInfo = TestHelper.orderMap(productId);
+    ObjectId orderId = user.placeOrder(orderInfo).get().getId();
+    Order order = user.findOrderById(orderId).get();
+
+    Map<String, Object> paymentInfo = TestHelper.paymentMap();
+    order.pay(paymentInfo);
+
+    Response get = get("users/" + userId + "/orders/" + orderId + "/payment");
+    Map<String, Object> map = get.readEntity(Map.class);
+
+    assertThat(map.get("pay_type"), is("CASH"));
+  }
 }

@@ -1,6 +1,7 @@
 package com.thoughtworks.ketsu.web;
 
 import com.thoughtworks.ketsu.domain.order.Order;
+import com.thoughtworks.ketsu.domain.payment.Payment;
 import com.thoughtworks.ketsu.domain.user.User;
 import com.thoughtworks.ketsu.domain.user.UserRepository;
 import com.thoughtworks.ketsu.web.jersey.Routes;
@@ -29,9 +30,18 @@ public class PaymentApi {
     Order paidOrder = order.pay(info);
 
     if (paidOrder.isPaid()) {
-      return Response.created(new Routes().paymentUri(paidOrder)).build();
+      return Response.created(new Routes().paymentUri(paidOrder.getPayment())).build();
     } else {
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public Payment getPayment(@PathParam("userId") ObjectId userId,
+                            @PathParam("orderId") ObjectId orderId) {
+    User user = userRepository.findById(userId).get();
+    Order order = user.findOrderById(orderId).get();
+    return order.findPayment().get();
   }
 }

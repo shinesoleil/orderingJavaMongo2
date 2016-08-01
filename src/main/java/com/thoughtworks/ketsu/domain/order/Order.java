@@ -59,7 +59,7 @@ public class Order implements Record{
   }
 
   public Payment getPayment() {
-    return new Payment(id, payment.getPayType(), payment.getPayTime(), payment.getAmount());
+    return new Payment(id, userId, payment.getPayType(), payment.getPayTime(), payment.getAmount());
   }
 
   public double getTotalPrice() {
