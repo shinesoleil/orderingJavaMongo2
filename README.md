@@ -12,10 +12,12 @@
   
 3. return 201 when POST product with parameters  
  e: 5 min  
+ r: 4 min
  
   
 4. return 400 when POST product with invalid parameters  
  e: 8 min  
+ r: 10 min
    
     
 5. return url in location when POST product with parameters
