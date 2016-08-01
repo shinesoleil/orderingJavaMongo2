@@ -54,6 +54,11 @@ public class Product implements Record {
 
   @Override
   public Map<String, Object> toJson(Routes routes) {
-    return null;
+    return new HashMap() {{
+      put("url", new Routes().productUri(Product.this));
+      put("name", name);
+      put("description", description);
+      put("price", price);
+    }};
   }
 }

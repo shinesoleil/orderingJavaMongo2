@@ -4,6 +4,7 @@ import com.thoughtworks.ketsu.domain.product.ProductRepository;
 import com.thoughtworks.ketsu.support.ApiSupport;
 import com.thoughtworks.ketsu.support.TestHelper;
 import com.thoughtworks.ketsu.support.TestRunner;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -48,7 +49,20 @@ public class ProductsApiTest extends ApiSupport {
     Response get = get("products");
     List<Map<String, Object>> mapList = get.readEntity(List.class);
 
+    assertThat(get.getStatus(), is(200));
     assertThat(mapList.size(), is(1));
     assertThat(mapList.get(0).get("name"), is("desk"));
+  }
+
+  @Test
+  public void should_return_product_json_when_get_by_id() {
+    Map<String, Object> info = TestHelper.productMap();
+    ObjectId id = productRepository.create(info).get().getId();
+
+    Response get = get("products/" + id);
+    Map<String, Object> map = get.readEntity(Map.class);
+
+    assertThat(get.getStatus(), is(200));
+    assertThat(map.get("name"), is("desk"));
   }
 }

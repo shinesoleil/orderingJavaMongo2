@@ -4,6 +4,7 @@ import com.thoughtworks.ketsu.domain.product.Product;
 import com.thoughtworks.ketsu.domain.product.ProductRepository;
 import com.thoughtworks.ketsu.web.exception.InvalidParameterException;
 import com.thoughtworks.ketsu.web.jersey.Routes;
+import org.bson.types.ObjectId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -52,4 +53,10 @@ public class ProductsApi {
     return productRepository.find();
   }
 
+  @GET
+  @Path("{productId}")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Product findProductById(@PathParam("productId") ObjectId productId) {
+    return productRepository.findById(productId).get();
+  }
 }

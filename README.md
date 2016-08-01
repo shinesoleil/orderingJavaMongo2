@@ -43,6 +43,7 @@
 
 1. return product json when GET product by product id  
  e: 10 min  
+ r: 5 min
     
   
 2. return 404 when GET product by product id fails  
