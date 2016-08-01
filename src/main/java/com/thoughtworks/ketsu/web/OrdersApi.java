@@ -36,8 +36,6 @@ public class OrdersApi {
       throw new InvalidParameterException(invalidParams);
     }
 
-
-
     User user = userRepository.findById(userId).get();
     Optional<Order> orderOptional = user.placeOrder(info);
 
@@ -46,5 +44,10 @@ public class OrdersApi {
     } else {
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
+  }
+
+  @GET
+  public Response findOrders() {
+    return Response.status(200).build();
   }
 }
