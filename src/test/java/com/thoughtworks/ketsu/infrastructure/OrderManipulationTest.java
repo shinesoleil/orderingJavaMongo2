@@ -8,6 +8,7 @@ import com.thoughtworks.ketsu.domain.user.UserRepository;
 import com.thoughtworks.ketsu.support.TestHelper;
 import com.thoughtworks.ketsu.support.TestRunner;
 import org.bson.types.ObjectId;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -28,17 +29,26 @@ public class OrderManipulationTest {
   @Inject
   UserRepository userRepository;
 
-  @Test
-  public void should_create_order_with_orderItems_and_find_by_id() {
+  private ObjectId userId;
+  private User user;
+  private Map<String, Object> orderInfo;
+
+  @Before
+  public void setUp() {
     Map<String, Object> productInfo = TestHelper.productMap();
     Product product = productRepository.create(productInfo).get();
     ObjectId productId = product.getId();
 
     Map<String, Object> userInfo = TestHelper.userMap();
-    User user = userRepository.create(userInfo).get();
-    ObjectId userId = user.getId();
+    user = userRepository.create(userInfo).get();
+    userId = user.getId();
 
-    Map<String, Object> orderInfo = TestHelper.orderMap(productId);
+    orderInfo = TestHelper.orderMap(productId);
+  }
+
+  @Test
+  public void should_create_order_with_orderItems_and_find_by_id() {
+
     ObjectId orderId = user.placeOrder(orderInfo).get().getId();
     Optional<Order> orderOptional = user.findOrderById(orderId);
 
@@ -50,15 +60,7 @@ public class OrderManipulationTest {
 
   @Test
   public void should_find_all_orders() {
-    Map<String, Object> productInfo = TestHelper.productMap();
-    Product product = productRepository.create(productInfo).get();
-    ObjectId productId = product.getId();
 
-    Map<String, Object> userInfo = TestHelper.userMap();
-    User user = userRepository.create(userInfo).get();
-    ObjectId userId = user.getId();
-
-    Map<String, Object> orderInfo = TestHelper.orderMap(productId);
     user.placeOrder(orderInfo);
 
     List<Order> orders = user.find();
