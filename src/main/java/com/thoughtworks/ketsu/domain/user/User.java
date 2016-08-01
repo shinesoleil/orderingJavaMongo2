@@ -7,13 +7,11 @@ import com.thoughtworks.ketsu.web.jersey.Routes;
 import org.bson.types.ObjectId;
 import org.jongo.Jongo;
 import org.jongo.MongoCollection;
+import org.jongo.MongoCursor;
 import org.jongo.marshall.jackson.oid.MongoId;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class User implements Record{
   @Inject
@@ -63,6 +61,18 @@ public class User implements Record{
     MongoCollection orders = jongo.getCollection("orders");
 
     return Optional.ofNullable(orders.findOne(orderId).as(Order.class));
+  }
+
+  public List<Order> find() {
+    MongoCollection orders = jongo.getCollection("orders");
+    MongoCursor<Order> cursor =  orders.find().as(Order.class);
+    List<Order> orderList = new ArrayList<>();
+
+    while (cursor.hasNext()) {
+      orderList.add(cursor.next());
+    }
+
+    return orderList;
   }
 
   @Override
